@@ -1,8 +1,8 @@
 {
-  "name": "mpcmf/mpcmf-webApp",
+  "name": "greevex/beauty-url-shortener",
   "license": "MIT",
   "type": "project",
-  "version": "1.0.0",
+  "version": "0.2.1",
   "minimum-stability": "dev",
   "authors": [
     {
