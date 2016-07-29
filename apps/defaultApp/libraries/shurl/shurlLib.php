@@ -29,7 +29,7 @@ class shurlLib
         return trim(base64_encode($prm), '=');
     }
 
-    public function hash($url)
+    public function hash($url, $outputHashLen = 12)
     {
         $h0 = sprintf('%032s', decbin(0x67452301));
         $h1 = sprintf('%032s', decbin(0xEFCDAB89));
@@ -61,7 +61,7 @@ class shurlLib
         foreach(str_split($data, 512) as $chunk) {
             $subChunks = str_split($chunk, 32);
 
-            for($i = 8; $i < 80; $i++) {
+            for($i = 16; $i < 80; $i++) {
                 $subChunks[$i] = $this->binXor($this->binXor($this->binXor($subChunks[$i - 3], $subChunks[$i - 4]), $subChunks[$i - 6]), $subChunks[$i - 8]);
             }
 
@@ -99,11 +99,108 @@ class shurlLib
 //        return bin2hex($hashStr);
 
         $result = '';
-        for($i = 0; $i < 8; $i++) {
+        for($i = 0; $i < $outputHashLen; $i++) {
             $result .= self::$dict[ord($hashStr[$i]) % 64];
         }
 
         return $result;
+    }
+
+
+    public function hash2($url, $outputHashLen = 12)
+    {
+        $h0 = 0x67452301;
+        $h1 = 0xEFCDAB89;
+        $h2 = 0x98BADCFE;
+
+        $k0 = 0x5A827999;
+        $k1 = 0x6ED9EBA1;
+        $k2 = 0x8F1BBCDC;
+        $k3 = 0xCA62C1D6;
+
+        $data = $this->str2bin($url) . '1';
+
+        $baseLen = 448;
+
+        $binLen = strlen($data);
+        while($binLen % 512 !== $baseLen) {
+            $binLen++;
+            $data .= '0';
+        }
+        $binLenBin = str_pad(decbin($binLen), 64, '0', STR_PAD_LEFT);
+        $data .= $binLenBin;
+        $realLen = strlen($data);
+
+        $c0 = $h0;
+        $c1 = $h1;
+        $c2 = $h2;
+
+        for($dataOffset = 0; $dataOffset < $realLen; $dataOffset += 512) {
+            $chunk = substr($data, $dataOffset, 512);
+
+            $subChunks = [];
+            for($chunkOffset = 0; $chunkOffset < 512; $chunkOffset += 32) {
+                $subChunks[] = bindec(substr($chunk, $chunkOffset, 32));
+            }
+
+            for($i = 16; $i < 80; $i++) {
+                $subChunks[$i] = $this->int32Overhead($subChunks[$i - 3] ^ $subChunks[$i - 8] ^ $subChunks[$i - 14] ^ $subChunks[$i - 16]);
+            }
+
+            foreach($subChunks as $i => $subC) {
+                if ($i <= 19) {
+                    $f = ($c1 & $c2) | ((~$c1) & $c0);
+                    $k = $k0;
+                } elseif ($i <= 39) {
+                    $f = $c1 ^ $c2 ^ $c0;
+                    $k = $k1;
+                } elseif ($i <= 59) {
+                    $f = ($c1 & $c2) | ($c1 & $c0) | ($c2 & $c0);
+                    $k = $k2;
+                } else {
+                    $f = $c1 ^ $c2 ^ $c0;
+                    $k = $k3;
+                }
+
+                $tmp = $this->intLeftRotate($c0, 5) + $f + $c2 + $k + $subC;
+
+                $c2 = $this->int32Overhead($this->intLeftRotate($c1, 30));
+                $c1 = $c0;
+                $c0 = $tmp;
+            }
+
+            self::DEBUG && var_dump('=== 3 ===', $c0, $c1, $c2);
+
+            $h0 = $this->int32Overhead($h0 ^ $c0);
+            $h1 = $this->int32Overhead($h1 ^ $c1);
+            $h2 ^= $c2;
+        }
+
+        $hashStr = hex2bin(sprintf('%08s', dechex($h0)) . sprintf('%08s', dechex($h1)) . sprintf('%08s', dechex($h2)));
+
+        $result = '';
+        for($i = 0; $i < $outputHashLen; $i++) {
+            $result .= self::$dict[ord($hashStr[$i]) % 64];
+        }
+
+        return $result;
+    }
+
+    public function sha1($url, $outputHashLen = 12)
+    {
+        $hashStr = sha1($url);
+
+        $result = '';
+        for($i = 0; $i < $len; $i++) {
+            $result .= self::$dict[ord($hashStr[$i]) % 64];
+        }
+
+        return $result;
+    }
+
+    private function int32Overhead($int)
+    {
+        return bindec(substr(str_pad(decbin($int), 32, '0', STR_PAD_LEFT), -32));
     }
 
     private function binXor($str1, $str2)
@@ -149,6 +246,13 @@ class shurlLib
     private function binLeftRotate($str, $count)
     {
         return substr($str, $count) . substr($str, 0, $count);
+    }
+
+    private function intLeftRotate($int, $count)
+    {
+        $str = decbin($int);
+
+        return bindec(substr($str, $count) . substr($str, 0, $count));
     }
 
     private function str2bin($mystring) {

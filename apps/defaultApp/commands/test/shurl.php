@@ -53,27 +53,29 @@ class shurl
         $shurl = new shurlLib();
 
         if(!empty($url)) {
-            var_dump($url, $shurl->hash($url));
+            var_dump($url, $shurl->hash2($url));
             exit;
         }
 
         $hashes = [];
 
-        $offset = 100000;
-        $count = 1000000;
-        $pb = new progressBar($count);
-        for($i = 0; $i < $count; $i++) {
-            $tipaUrl = $i + $offset;
-            $hash = $shurl->hash((string)$tipaUrl);
+        $offset = 'aaaa';
+        $count = 'aaaaaaaaa';
+        $pb = new progressBar(pow(strlen($count), 26));
+        $counter = 0;
+        for($i = $offset; $i !== $count; $i++) {
+            $counter++;
+            $tipaUrl = $i;
+            $hash = $shurl->hash2((string)$tipaUrl);
             if(!isset($hashes[$hash])) {
                 $hashes[$hash] = $tipaUrl;
 
             } else {
 
-                var_dump('COLLISION', $hash, $hashes[$hash], $tipaUrl);
+                error_log("\n[COLLISION HASH] ({$counter}) {$hash} on {$hashes[$hash]} and {$tipaUrl}");
             }
-            if($count % 1000 === 0) {
-                $pb->update($i);
+            if($counter % 100 === 0) {
+                $pb->update($counter);
                 $pb->draw();
             }
         }
