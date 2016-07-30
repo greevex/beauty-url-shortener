@@ -87,6 +87,7 @@ class shurlGenerate
 
                 } elseif(++$collisions > $greatestCollision) {
                     error_log("\n[COLLISIONS] Breaking cycle, cuz too much collisions ({$collisions} > {$greatestCollision})");
+                    $collisions = 9999999;
                     break;
                 }
                 if($counter % 500 === 0) {
@@ -96,6 +97,7 @@ class shurlGenerate
 
                     if($counter === 5000 && $collisions > 20) {
                         error_log("\n[COLLISIONS] EARLY breaking, cuz too much collisions on {$counter} ({$collisions})");
+                        $collisions = 9999999;
                         break;
                     }
                 }
