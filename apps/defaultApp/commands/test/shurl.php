@@ -27,6 +27,8 @@ class shurl
     protected function defineArguments()
     {
         $this->addArgument('url', InputArgument::OPTIONAL, 'Url');
+        $this->addArgument('type', InputArgument::OPTIONAL, 'Hash type', 'hash2');
+        $this->addArgument('length', InputArgument::OPTIONAL, 'Hash length', 12);
     }
 
     /**
@@ -49,11 +51,13 @@ class shurl
     protected function handle(InputInterface $input, OutputInterface $output)
     {
         $url = $input->getArgument('url');
+        $type = $input->getArgument('type');
+        $length = $input->getArgument('length');
 
         $shurl = new shurlLib();
 
         if(!empty($url)) {
-            var_dump($url, $shurl->hash2($url));
+            var_dump($url, $shurl->{$type}($url, $length));
             exit;
         }
 
@@ -66,7 +70,7 @@ class shurl
         for($i = $offset; $i !== $count; $i++) {
             $counter++;
             $tipaUrl = $i;
-            $hash = $shurl->hash2((string)$tipaUrl);
+            $hash = $shurl->{$type}((string)$tipaUrl, $length);
             if(!isset($hashes[$hash])) {
                 $hashes[$hash] = $tipaUrl;
 

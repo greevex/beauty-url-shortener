@@ -107,16 +107,25 @@ class shurlLib
     }
 
 
-    public function hash2($url, $outputHashLen = 12)
-    {
-        $h0 = 0x67452301;
-        $h1 = 0xEFCDAB89;
-        $h2 = 0x98BADCFE;
+    public function hash2($url, $outputHashLen = 12, $options = [
+        'h0' => 3583331880,
+        'h1' => 2336997804,
+        'h2' => 2214680746,
 
-        $k0 = 0x5A827999;
-        $k1 = 0x6ED9EBA1;
-        $k2 = 0x8F1BBCDC;
-        $k3 = 0xCA62C1D6;
+        'k0' => 1005295650,
+        'k1' => 3334547280,
+        'k2' => 152863840,
+        'k3' => 3472684634
+    ])
+    {
+        $h0 = $options['h0'];
+        $h1 = $options['h1'];
+        $h2 = $options['h2'];
+
+        $k0 = $options['k0'];
+        $k1 = $options['k1'];
+        $k2 = $options['k2'];
+        $k3 = $options['k3'];
 
         $data = $this->str2bin($url) . '1';
 
@@ -188,10 +197,22 @@ class shurlLib
 
     public function sha1($url, $outputHashLen = 12)
     {
-        $hashStr = sha1($url);
+        $hashStr = sha1($url, true);
 
         $result = '';
-        for($i = 0; $i < $len; $i++) {
+        for($i = 0; $i < $outputHashLen; $i++) {
+            $result .= self::$dict[ord($hashStr[$i]) % 64];
+        }
+
+        return $result;
+    }
+
+    public function md5($url, $outputHashLen = 12)
+    {
+        $hashStr = md5($url, true);
+
+        $result = '';
+        for($i = 0; $i < $outputHashLen; $i++) {
             $result .= self::$dict[ord($hashStr[$i]) % 64];
         }
 
