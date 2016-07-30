@@ -54,14 +54,13 @@ class shurlGenerate
     {
         $length = 4;
         $options = [
-            'h0' => 3583331880,
-            'h1' => 2336997804,
-            'h2' => 2214680746,
-
-            'k0' => 1005295650,
-            'k1' => 3334547280,
-            'k2' => 152863840,
-            'k3' => 3472684634
+            "h0" => 1028548600,
+            "h1" => 3940508304,
+            "h2" => 2777226388,
+            "k0" => 594927504,
+            "k1" => 1792075708,
+            "k2" => 669257952,
+            "k3" => 2151107592
         ];
 
         $shurl = new shurlLib();
@@ -87,18 +86,23 @@ class shurlGenerate
                     $hashes[$hash] = true;
 
                 } elseif(++$collisions > $greatestCollision) {
-                    error_log("\n[COLLISIONS] Breaking cycle, cuz too much collisions ({$collisions} > {$greatestCollision}");
+                    error_log("\n[COLLISIONS] Breaking cycle, cuz too much collisions ({$collisions} > {$greatestCollision})");
                     break;
                 }
                 if($counter % 500 === 0) {
                     $pb->update($counter);
                     $pb->draw();
                     error_log("\n[COLLISIONS] {$collisions} on {$counter}");
+
+                    if($counter === 5000 && $collisions > 20) {
+                        error_log("\n[COLLISIONS] EARLY breaking, cuz too much collisions on {$counter} ({$collisions})");
+                        break;
+                    }
                 }
             }
 
             if($collisions <= $greatestCollision) {
-                file_put_contents("/tmp/SHURL/{$collisions}.i-{$glIt}.json", json_encode($options, 448));
+                file_put_contents("/tmp/SHURL/{$collisions}.i-{$glIt}.json", var_export($options, true));
                 error_log("\n[!!! GREAT FOUND !!!] old: {$greatestCollision} / new: {$collisions} {on {$count} iterations}");
                 error_log(json_encode($options, 448));
                 $greatestCollision = $collisions;
