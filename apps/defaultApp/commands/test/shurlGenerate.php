@@ -54,13 +54,13 @@ class shurlGenerate
     {
         $length = 4;
         $options = [
-            "h0" => 1028548600,
-            "h1" => 3940508304,
-            "h2" => 2777226388,
-            "k0" => 594927504,
-            "k1" => 1792075708,
-            "k2" => 669257952,
-            "k3" => 2151107592
+            'h0' => 3612248634,
+            'h1' => 2844536214,
+            'h2' => 1697334478,
+            'k0' => 288723168,
+            'k1' => 1514888828,
+            'k2' => 4047859396,
+            'k3' => 1087655364,
         ];
 
         $shurl = new shurlLib();
@@ -95,7 +95,7 @@ class shurlGenerate
                     $pb->draw();
                     error_log("\n[COLLISIONS] {$collisions} on {$counter}");
 
-                    if(($counter <= 5000 && $collisions > 20) || ($counter <= 10000 && $collisions > 58)) {
+                    if(($counter <= 5000 && $collisions > 10) || ($counter <= 10000 && $collisions > 58)) {
                         error_log("\n[COLLISIONS] EARLY breaking, cuz too much collisions on {$counter} ({$collisions})");
                         $collisions = 9999999;
                         break;
