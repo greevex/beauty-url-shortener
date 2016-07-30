@@ -95,7 +95,7 @@ class shurlGenerate
                     $pb->draw();
                     error_log("\n[COLLISIONS] {$collisions} on {$counter}");
 
-                    if($counter === 5000 && $collisions > 20) {
+                    if(($counter === 5000 && $collisions > 20) || ($counter === 10000 && $collisions > 58)) {
                         error_log("\n[COLLISIONS] EARLY breaking, cuz too much collisions on {$counter} ({$collisions})");
                         $collisions = 9999999;
                         break;
