@@ -64,18 +64,18 @@ class shurl
         $hashes = [];
 
         $offset = 'aaaa';
-        $count = 'aaaaaaaaa';
-        $pb = new progressBar(pow(strlen($count), 26));
-        $counter = 0;
-        for($i = $offset; $i !== $count; $i++) {
-            $counter++;
+        $count = 15000;
+        $pb = new progressBar($count);
+        $counter = 1;
+        $collisions = 0;
+        for($i = $offset; $counter <= $count; $i++, $counter++) {
             $tipaUrl = $i;
             $hash = $shurl->{$type}((string)$tipaUrl, $length);
             if(!isset($hashes[$hash])) {
                 $hashes[$hash] = $tipaUrl;
 
             } else {
-
+                $collisions++;
                 error_log("\n[COLLISION HASH] ({$counter}) {$hash} on {$hashes[$hash]} and {$tipaUrl}");
             }
             if($counter % 100 === 0) {
@@ -83,5 +83,7 @@ class shurl
                 $pb->draw();
             }
         }
+
+        error_log("\n COLLISION: {$collisions} on {$count}");
     }
 }
