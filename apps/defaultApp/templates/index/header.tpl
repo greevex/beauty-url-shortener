@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>DefaultApp Project!{if isset($title) && !empty($title)} / {$title}{/if}</title>
+    <title>Link shortener{if isset($title) && !empty($title)} / {$title}{/if}</title>
 
     {*<!-- VENDORS -->*}
     <script type="text/javascript" src="/node_modules/handlebars/dist/handlebars.js"></script>
