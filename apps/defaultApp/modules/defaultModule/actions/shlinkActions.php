@@ -64,7 +64,7 @@ class shlinkActions
                 'method' => '__shorten',
                 'path' => '/~create',
                 'http' => [
-                    'GET',
+                    'POST',
                 ],
                 'required' => [
 

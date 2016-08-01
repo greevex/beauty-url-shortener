@@ -31,8 +31,8 @@ class shlinkController
 
     public function __shorten()
     {
-        $js = (bool)$this->getSlim()->request()->get('js');
-        $url = (string)$this->getSlim()->request()->get('url');
+        $js = (bool)$this->getSlim()->request()->post('js');
+        $url = (string)$this->getSlim()->request()->post('url');
         $url = trim($url);
 
         /** @noinspection IsEmptyFunctionUsageInspection */
@@ -42,7 +42,7 @@ class shlinkController
                 'error' => 'URL is empty',
             ]);
         }
-        if(!preg_match('/^https?\:\/\//ui', $url)) {
+        if(!preg_match('/[a-z]+\:\/\//ui', $url)) {
             return self::error([
                 'url' => $url,
                 'error' => 'Invalid URL',
