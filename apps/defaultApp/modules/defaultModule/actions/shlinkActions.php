@@ -77,5 +77,23 @@ class shlinkActions
                     aclManager::ACL__GROUP_GUEST
                 ],
             ], $this));
+        $this->registerAction('redirect', new action([
+                'name' => 'Redirect',
+                'method' => '__redirect',
+                'path' => '/:short',
+                'http' => [
+                    'GET',
+                ],
+                'required' => [
+
+                ],
+                'template' => 'shurl/redirect.tpl',
+                'useBase' => true,
+                'relative' => false,
+                'type' => action::TYPE__DEFAULT,
+                'acl' => [
+                    aclManager::ACL__GROUP_GUEST
+                ],
+            ], $this));
     }
 }

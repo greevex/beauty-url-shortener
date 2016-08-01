@@ -125,26 +125,6 @@ class shlinkMapper
                     'unique' => false,
                 ],
             ],
-            self::FIELD__ID => [
-                'getter' => 'getId',
-                'setter' => 'setId',
-                'role' => [
-                    'key' => true,
-                    'generate-key' => true,
-                ],
-                'name' => 'Id',
-                'description' => 'Id',
-                'type' => 'string',
-                'formType' => 'text',
-                'validator' => [
-                ],
-                'relations' => [
-                ],
-                'options' => [
-                    'required' => false,
-                    'unique' => true,
-                ],
-            ],
             self::FIELD__LONG => [
                 'getter' => 'getLong',
                 'setter' => 'setLong',
@@ -185,6 +165,8 @@ class shlinkMapper
                 'getter' => 'getShort',
                 'setter' => 'setShort',
                 'role' => [
+                    'key' => true,
+                    'generate-key' => false,
                 ],
                 'name' => 'Short',
                 'description' => 'Short',

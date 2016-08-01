@@ -2,6 +2,7 @@
 namespace mpcmf\modules\defaultModule\controllers;
 
 use mpcmf\modules\defaultModule\mappers\shlinkMapper;
+use mpcmf\modules\defaultModule\models\shlinkModel;
 use mpcmf\modules\moduleBase\controllers\controllerBase;
 use mpcmf\system\pattern\singleton;
 
@@ -67,5 +68,21 @@ class shlinkController
             'url' => $url,
             'shlink' => $shlinkModel,
         ]);
+    }
+
+    public function __redirect($short)
+    {
+        try {
+            /** @var shlinkModel $shlink */
+            $shlink = shlinkMapper::getInstance()->getById($short);
+            $longUrl = $shlink->getLong();
+            $this->getSlim()->redirect($longUrl);
+
+            return self::success([
+
+            ]);
+        } catch(\Exception $e) {
+            return self::errorByException($e);
+        }
     }
 }
