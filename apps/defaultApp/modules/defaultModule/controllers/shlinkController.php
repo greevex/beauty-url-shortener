@@ -1,6 +1,7 @@
 <?php
 namespace mpcmf\modules\defaultModule\controllers;
 
+use mpcmf\modules\defaultModule\mappers\shlinkMapper;
 use mpcmf\modules\moduleBase\controllers\controllerBase;
 use mpcmf\system\pattern\singleton;
 
@@ -20,4 +21,33 @@ class shlinkController
 {
 
     use singleton;
+
+    public function __home()
+    {
+        return self::success([
+            'shlinkMapper' => shlinkMapper::getInstance()
+        ]);
+    }
+
+    public function __shorten()
+    {
+        $js = (bool)$this->getSlim()->request()->get('js');
+        $url = (string)$this->getSlim()->request()->get('url');
+
+        //@todo if empty
+
+        $params = [
+            'is_web' => true,
+            'addr' => $_SERVER['REMOTE_ADDR'],
+            'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+            'js' => $js,
+        ];
+
+        $shlinkModel = shlinkMapper::getInstance()->storeByUrl($url, $params);
+
+        return self::success([
+            'url' => $url,
+            'shlink' => $shlinkModel,
+        ]);
+    }
 }

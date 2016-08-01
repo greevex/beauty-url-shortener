@@ -1,7 +1,9 @@
 <?php
 namespace mpcmf\modules\defaultModule\models;
 
+use mpcmf\modules\defaultModule\mappers\settingsMapper;
 use mpcmf\modules\moduleBase\models\modelBase;
+use mpcmf\system\cache\cache;
 use mpcmf\system\pattern\singleton;
 
 /**
@@ -39,4 +41,25 @@ class shlinkModel
 {
 
     use singleton;
+
+    const BASE_DOMAIN_CKEY = 'shlink.base_domain';
+
+    public function getShortUrl($https = false)
+    {
+
+        return ($https ? 'https' : 'http') . "://{$this->getBaseDomain()}/{$this->getShort()}";
+    }
+
+    protected function getBaseDomain()
+    {
+        $baseDomain = cache::getCached(self::BASE_DOMAIN_CKEY);
+        if(!$baseDomain) {
+
+            $baseDomain = settingsMapper::getInstance()->getById(self::BASE_DOMAIN_CKEY)->getValue();
+
+            cache::setCached(self::BASE_DOMAIN_CKEY, $baseDomain);
+        }
+
+        return $baseDomain;
+    }
 }

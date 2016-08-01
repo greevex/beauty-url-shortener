@@ -1,7 +1,9 @@
 <?php
 namespace mpcmf\modules\defaultModule\actions;
 
+use mpcmf\modules\moduleBase\actions\action;
 use mpcmf\modules\moduleBase\actions\actionsBase;
+use mpcmf\system\acl\aclManager;
 use mpcmf\system\pattern\singleton;
 
 /**
@@ -35,9 +37,45 @@ class shlinkActions
      * Bind some custom actions
      *
      * @return mixed
+     * @throws \mpcmf\modules\moduleBase\exceptions\actionException
      */
     public function bind()
     {
-        // TODO: Implement bind() method.
+        $this->registerAction('/', new action([
+                'name' => 'Home',
+                'method' => '__home',
+                'path' => '/',
+                'http' => [
+                    'GET',
+                ],
+                'required' => [
+
+                ],
+                'template' => 'shurl/home.tpl',
+                'useBase' => true,
+                'relative' => false,
+                'type' => action::TYPE__DEFAULT,
+                'acl' => [
+                    aclManager::ACL__GROUP_GUEST
+                ],
+            ], $this));
+        $this->registerAction('shorten', new action([
+                'name' => 'Shorten',
+                'method' => '__shorten',
+                'path' => '/~create',
+                'http' => [
+                    'GET',
+                ],
+                'required' => [
+
+                ],
+                'template' => 'shurl/shorten.tpl',
+                'useBase' => true,
+                'relative' => false,
+                'type' => action::TYPE__DEFAULT,
+                'acl' => [
+                    aclManager::ACL__GROUP_GUEST
+                ],
+            ], $this));
     }
 }

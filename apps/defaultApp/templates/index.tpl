@@ -1,19 +1,21 @@
 {include file="index/header.tpl"}
 
 <div id="wrapper">
-    {include file="index/navbar.tpl"}
+    {if $_acl->getCurrentUser()->isAdmin()}
+        {include file="index/navbar.tpl"}
+    {/if}
     <div id="page-wrapper">
         {if isset($_template) && !empty($_template)}
             {include file=$_template}
         {else}
-            {include file="index/default.tpl"}
+            {include file="shurl/home.tpl"}
         {/if}
     </div>
     <!-- /#page-wrapper -->
 </div>
 <!-- /#wrapper -->
 
-<div class="container text-muted">
-<footer style="margin:15px;"><small>{$_profiler::getStackAsString()}</small></footer>
+<!--
+{$_profiler::getStackAsString()}
+-->
 {include file="index/footer.tpl"}
-</div>
