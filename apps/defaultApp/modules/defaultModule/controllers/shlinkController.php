@@ -33,8 +33,21 @@ class shlinkController
     {
         $js = (bool)$this->getSlim()->request()->get('js');
         $url = (string)$this->getSlim()->request()->get('url');
+        $url = trim($url);
 
-        //@todo if empty
+        /** @noinspection IsEmptyFunctionUsageInspection */
+        if(empty($url)) {
+            return self::error([
+                'url' => $url,
+                'error' => 'URL is empty',
+            ]);
+        }
+        if(!preg_match('/^https?\:\/\//ui', $url)) {
+            return self::error([
+                'url' => $url,
+                'error' => 'Invalid URL',
+            ]);
+        }
 
         $params = [
             'is_web' => true,
@@ -43,7 +56,12 @@ class shlinkController
             'js' => $js,
         ];
 
-        $shlinkModel = shlinkMapper::getInstance()->storeByUrl($url, $params);
+        try {
+            $shlinkModel = shlinkMapper::getInstance()->storeByUrl($url, $params);
+        } catch(\Exception $e) {
+
+            return self::errorByException($e);
+        }
 
         return self::success([
             'url' => $url,
