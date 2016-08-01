@@ -108,13 +108,13 @@ class shurlLib
 
 
     public function hash2($url, $outputHashLen = 12, $options = [
-        'h0' => 3612248634,
-        'h1' => 2844536214,
-        'h2' => 1697334478,
-        'k0' => 288723168,
-        'k1' => 1514888828,
-        'k2' => 4047859396,
-        'k3' => 1087655364,
+        'h0' => 2300548588,
+        'h1' => 2328461800,
+        'h2' => 1809517040,
+        'k0' => 318459170,
+        'k1' => 3920783476,
+        'k2' => 2819974008,
+        'k3' => 3451250094,
     ])
     {
         $h0 = $options['h0'];
@@ -150,6 +150,8 @@ class shurlLib
             for($chunkOffset = 0; $chunkOffset < 512; $chunkOffset += 32) {
                 $subChunks[] = bindec(substr($chunk, $chunkOffset, 32));
             }
+
+
 
             for($i = 16; $i < 80; $i++) {
                 $subChunks[$i] = $this->int32Overhead($subChunks[$i - 3] ^ $subChunks[$i - 8] ^ $subChunks[$i - 14] ^ $subChunks[$i - 16]);
@@ -199,6 +201,19 @@ class shurlLib
         $hashStr = sha1($url, true);
 
         $result = '';
+        for($i = 0; $i < $outputHashLen; $i++) {
+            $result .= self::$dict[ord($hashStr[$i]) % 64];
+        }
+
+        return $result;
+    }
+
+    public function mixed($url, $outputHashLen = 12)
+    {
+        $hashStr = sha1(hash('sha256', $url, true), true);
+
+        $result = '';
+
         for($i = 0; $i < $outputHashLen; $i++) {
             $result .= self::$dict[ord($hashStr[$i]) % 64];
         }
