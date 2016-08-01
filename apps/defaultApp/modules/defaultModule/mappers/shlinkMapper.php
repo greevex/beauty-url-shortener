@@ -204,7 +204,7 @@ class shlinkMapper
 
     /**
      * @param string $url
-     * @param array  $params 'is_web' : bool, 'addr' : string, 'user_agent' : string
+     * @param array  $params 'is_web' : bool, 'addr' : string, 'user_agent' : string, 'js' : boolean
      *
      * @return shlinkModel
      * @throws \mpcmf\modules\moduleBase\exceptions\mapperException
