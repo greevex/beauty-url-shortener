@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"burls.url"},{"v":1,"unique":true,"key":{"id":""},"name":"id_","ns":"burls.url"},{"v":1,"unique":true,"key":{"short":""},"name":"short_","ns":"burls.url"},{"v":1,"key":{"c_tm":1.0},"name":"c_tm_1","ns":"burls.url"}]}
+{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"burls.url"},{"v":1,"unique":true,"key":{"short":""},"name":"short_","ns":"burls.url"},{"v":1,"key":{"c_tm":1.0},"name":"c_tm_1","ns":"burls.url"}]}
