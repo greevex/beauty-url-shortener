@@ -6,6 +6,7 @@ use mpcmf\modules\defaultModule\mappers\shlinkMapper;
 use mpcmf\modules\defaultModule\models\shlinkModel;
 use mpcmf\modules\moduleBase\controllers\controllerBase;
 use mpcmf\system\pattern\singleton;
+use Slim\Slim;
 
 /**
  * Class shlinkController
@@ -77,14 +78,15 @@ class shlinkController
             /** @var shlinkModel $shlink */
             $shlink = shlinkMapper::getInstance()->getById($short);
             $longUrl = $shlink->getLong();
+            /** @var Slim $slim */
             $slim = $this->getSlim();
 
-            $slim->setCookie('usr', $this->generateCookieUser(), strtotime('+6 month'));
-            $this->getSlim()->redirect($longUrl, 301);
-
-            return self::success([
+//            $slim->redirect($longUrl, 301);
+            $slim->render('shurl/redirect.tpl', self::success([
                 'url' => $longUrl
-            ]);
+            ]), 301);
+            $slim->stop();
+
         } catch(\Exception $e) {
             return self::errorByException($e);
         }
