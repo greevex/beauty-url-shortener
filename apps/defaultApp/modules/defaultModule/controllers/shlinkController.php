@@ -90,14 +90,14 @@ class shlinkController
                 'url' => $longUrl
             ]), 301);
             error_log('Stopping');
-            $slim->stop();
-            error_log('Stopped');
         } catch(\Exception $e) {
             error_log('An ERROR occurred:');
             error_log(json_encode($e, 448));
 
             return self::errorByException($e, 404);
         }
+
+        $slim->stop();
     }
 
     private function generateCookieUser()
