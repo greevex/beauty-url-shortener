@@ -87,6 +87,7 @@ class shlinkController
             error_log('Rendering...');
 //            $slim->redirect($longUrl, 301);
             $slim->response()->header('Location', $longUrl);
+            $slim->response()->header('Cache-Control', 'private, max-age=90');
             $slim->render('shurl/redirect.tpl', self::success([
                 'url' => $longUrl
             ]), 301);
