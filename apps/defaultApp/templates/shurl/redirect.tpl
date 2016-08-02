@@ -1,5 +1,3 @@
-{include file="shurl/form.tpl"}
-
 <div class="mid-container">
     {if isset($data['error'])}
         <div class="alert alert-danger">
