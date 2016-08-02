@@ -1,4 +1,5 @@
 <div class="mid-container">
+
     {if isset($data['error'])}
         <div class="alert alert-danger">
             {$data['error']}
@@ -9,6 +10,6 @@
         </div>
     {else}
     <a href="{$data['url']}">moved here</a>
-
     {/if}
+
 </div>

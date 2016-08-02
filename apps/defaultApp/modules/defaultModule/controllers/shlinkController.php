@@ -86,6 +86,7 @@ class shlinkController
 
             error_log('Rendering...');
 //            $slim->redirect($longUrl, 301);
+            $slim->response()->header('Location', $longUrl);
             $slim->render('shurl/redirect.tpl', self::success([
                 'url' => $longUrl
             ]), 301);
