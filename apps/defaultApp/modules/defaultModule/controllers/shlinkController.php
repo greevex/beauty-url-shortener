@@ -1,6 +1,7 @@
 <?php
 namespace mpcmf\modules\defaultModule\controllers;
 
+use mpcmf\apps\defaultApp\libraries\shurl\shurlLib;
 use mpcmf\modules\defaultModule\mappers\shlinkMapper;
 use mpcmf\modules\defaultModule\models\shlinkModel;
 use mpcmf\modules\moduleBase\controllers\controllerBase;
@@ -76,13 +77,21 @@ class shlinkController
             /** @var shlinkModel $shlink */
             $shlink = shlinkMapper::getInstance()->getById($short);
             $longUrl = $shlink->getLong();
-            $this->getSlim()->redirect($longUrl);
+            $slim = $this->getSlim();
+
+            $slim->setCookie('usr', $this->generateCookieUser(), strtotime('+6 month'));
+            $this->getSlim()->redirect($longUrl, 301);
 
             return self::success([
-
+                'url' => $longUrl
             ]);
         } catch(\Exception $e) {
             return self::errorByException($e);
         }
+    }
+
+    private function generateCookieUser()
+    {
+        return shurlLib::getInstance()->mixed("{$_SERVER['REMOTE_ADDR']}:{$_SERVER['HTTP_USER_AGENT']}", 12);
     }
 }

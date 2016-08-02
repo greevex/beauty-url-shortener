@@ -9,5 +9,8 @@
         <div class="alert alert-danger">
             {$data|json_encode:448}
         </div>
+    {else}
+    <a href="{$data['url']}">moved here</a>
+
     {/if}
 </div>
