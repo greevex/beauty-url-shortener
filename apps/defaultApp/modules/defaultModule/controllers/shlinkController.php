@@ -2,7 +2,9 @@
 namespace mpcmf\modules\defaultModule\controllers;
 
 use mpcmf\apps\defaultApp\libraries\shurl\shurlLib;
+use mpcmf\modules\defaultModule\mappers\hitMapper;
 use mpcmf\modules\defaultModule\mappers\shlinkMapper;
+use mpcmf\modules\defaultModule\models\hitModel;
 use mpcmf\modules\defaultModule\models\shlinkModel;
 use mpcmf\modules\moduleBase\controllers\controllerBase;
 use mpcmf\system\pattern\singleton;
@@ -76,22 +78,25 @@ class shlinkController
     {
         try {
             /** @var shlinkModel $shlink */
-            error_log('Searching link...');
+            MPCMF_LL_DEBUG && error_log('Searching link...');
             $shlink = shlinkMapper::getInstance()->getById($short);
 
             $longUrl = $shlink->getLong();
-            error_log('Link found: ' . $longUrl);
+            MPCMF_LL_DEBUG && error_log('Link found: ' . $longUrl);
+
+            $this->saveHit($short);
+
             /** @var Slim $slim */
             $slim = $this->getSlim();
 
-            error_log('Rendering...');
+            MPCMF_LL_DEBUG && error_log('Rendering...');
 //            $slim->redirect($longUrl, 301);
             $slim->response()->header('Location', $longUrl);
             $slim->response()->header('Cache-Control', 'private, max-age=90');
             $slim->render('shurl/redirect.tpl', self::success([
                 'url' => $longUrl
             ]), 301);
-            error_log('Stopping');
+            MPCMF_LL_DEBUG && error_log('Stopping');
         } catch(\Exception $e) {
             error_log('An ERROR occurred:');
             error_log(json_encode($e, 448));
@@ -100,6 +105,21 @@ class shlinkController
         }
 
         $slim->stop();
+    }
+
+    private function saveHit($short)
+    {
+        try {
+            $hitModel = hitModel::fromArray([
+                hitMapper::FIELD__TM => time(),
+                hitMapper::FIELD__SHORT => $short,
+                hitMapper::FIELD__IP => $_SERVER['REMOTE_ADDR'],
+                hitMapper::FIELD__UA => $_SERVER['HTTP_USER_AGENT'],
+            ]);
+            hitMapper::getInstance()->save($hitModel);
+        } catch(\Exception $e) {
+            error_log("[ERROR] on saving hit: {$e->getMessage()}");
+        }
     }
 
     private function generateCookieUser()

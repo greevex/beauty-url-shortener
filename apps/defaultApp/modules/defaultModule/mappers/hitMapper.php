@@ -171,7 +171,7 @@ class hitMapper
                 'relations' => array (
                 ),
                 'options' => array (
-                  'required' => true,
+                  'required' => false,
                   'unique' => false,
                 ),
             ],
