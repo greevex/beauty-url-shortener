@@ -11,11 +11,7 @@
             {include file="shurl/home.tpl"}
         {/if}
     </div>
-    <!-- /#page-wrapper -->
 </div>
-<!-- /#wrapper -->
 
-<!--
-{$_profiler::getStackAsString()}
--->
+{*<!-- {$_profiler::getStackAsString()} -->*}
 {include file="index/footer.tpl"}
